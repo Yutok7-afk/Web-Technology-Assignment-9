@@ -1,0 +1,68 @@
+{
+  "info": {
+    "name": "Cricket Score Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8080"},
+    {"key": "matchId", "value": "1"}
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/health"}
+    },
+    {
+      "name": "Get Teams",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/teams"}
+    },
+    {
+      "name": "Get Players",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/players"}
+    },
+    {
+      "name": "Get Matches",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/matches"}
+    },
+    {
+      "name": "Live Dashboard",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/matches/{{matchId}}/dashboard"}
+    },
+    {
+      "name": "Record FOUR",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"batsmanId\": 1,\n  \"bowlerId\": 6,\n  \"type\": \"FOUR\",\n  \"runs\": 0,\n  \"note\": \"Cover drive\"\n}"},
+        "url": "{{baseUrl}}/api/matches/{{matchId}}/events"
+      }
+    },
+    {
+      "name": "Record RUN",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"batsmanId\": 1,\n  \"bowlerId\": 6,\n  \"type\": \"RUN\",\n  \"runs\": 2,\n  \"note\": \"Quick single/two\"\n}"},
+        "url": "{{baseUrl}}/api/matches/{{matchId}}/events"
+      }
+    },
+    {
+      "name": "Record WICKET",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"batsmanId\": 1,\n  \"bowlerId\": 6,\n  \"type\": \"WICKET\",\n  \"runs\": 0,\n  \"note\": \"Caught behind\"\n}"},
+        "url": "{{baseUrl}}/api/matches/{{matchId}}/events"
+      }
+    },
+    {
+      "name": "Update Match Status",
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"COMPLETED\"\n}"},
+        "url": "{{baseUrl}}/api/matches/{{matchId}}/status"
+      }
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket LiveScore Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">Spring Boot Project</p>
+            <h1>Cricket LiveScore Manager</h1>
+            <p class="subtitle">Real-time match, player, score and event management dashboard</p>
+        </div>
+        <div class="status-pill"><span class="pulse"></span> LIVE PLATFORM</div>
+    </header>
+
+    <main class="container">
+        <section class="toolbar card">
+            <div>
+                <label for="matchSelect">Select Match</label>
+                <select id="matchSelect"></select>
+            </div>
+            <button class="secondary" id="refreshBtn">Refresh</button>
+        </section>
+
+        <section class="score-hero card">
+            <div class="match-meta">
+                <div>
+                    <h2 id="matchTitle">Loading...</h2>
+                    <p id="venue">-</p>
+                </div>
+                <span id="matchStatus" class="match-status">LIVE</span>
+            </div>
+
+            <div class="score-main">
+                <div>
+                    <p class="muted">Current Innings</p>
+                    <div class="score"><span id="runs">0</span>/<span id="wickets">0</span></div>
+                    <p class="overs" id="overs">0.0 overs</p>
+                </div>
+                <div class="team-block">
+                    <span>Batting</span>
+                    <strong id="battingTeam">-</strong>
+                </div>
+                <div class="team-block">
+                    <span>Bowling</span>
+                    <strong id="bowlingTeam">-</strong>
+                </div>
+                <div class="team-block">
+                    <span>Target</span>
+                    <strong id="target">-</strong>
+                </div>
+            </div>
+
+            <div class="players-strip">
+                <div class="player-highlight">
+                    <span>STRIKER</span>
+                    <strong id="striker">-</strong>
+                </div>
+                <div class="player-highlight">
+                    <span>NON-STRIKER</span>
+                    <strong id="nonStriker">-</strong>
+                </div>
+                <div class="player-highlight">
+                    <span>BOWLER</span>
+                    <strong id="currentBowler">-</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid two-col">
+            <div class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Record Match Event</h3>
+                        <p>Each event is stored in MySQL and reflected on the dashboard.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <label for="batsmanSelect">Batsman</label>
+                        <select id="batsmanSelect"></select>
+                    </div>
+                    <div>
+                        <label for="bowlerSelect">Bowler</label>
+                        <select id="bowlerSelect"></select>
+                    </div>
+                </div>
+
+                <div class="run-input-row">
+                    <div>
+                        <label for="customRuns">Runs for RUN event</label>
+                        <input id="customRuns" type="number" min="0" max="6" value="1">
+                    </div>
+                    <button class="run-btn" data-type="DOT">0</button>
+                    <button class="run-btn" data-type="RUN">Run</button>
+                    <button class="run-btn boundary" data-type="FOUR">4</button>
+                    <button class="run-btn boundary" data-type="SIX">6</button>
+                </div>
+
+                <div class="event-buttons">
+                    <button class="danger" data-type="WICKET">Wicket</button>
+                    <button class="warning" data-type="WIDE">Wide</button>
+                    <button class="warning" data-type="NO_BALL">No Ball</button>
+                </div>
+                <p id="eventMessage" class="message"></p>
+            </div>
+
+            <div class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Recent Ball Events</h3>
+                        <p>Latest stored events for the selected innings.</p>
+                    </div>
+                </div>
+                <div id="eventList" class="event-list"></div>
+            </div>
+        </section>
+
+        <section class="grid two-col">
+            <div class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Current Batting Statistics</h3>
+                        <p>Runs, balls, boundaries and strike rate.</p>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>Player</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="battingTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Current Bowling Statistics</h3>
+                        <p>Overs, runs conceded, wickets and economy.</p>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>Player</th><th>O</th><th>R</th><th>W</th><th>Econ</th></tr>
+                        </thead>
+                        <tbody id="bowlingTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="section-heading">
+                <div>
+                    <h3>Match Summary</h3>
+                    <p>Persistent innings summary and match result information.</p>
+                </div>
+            </div>
+            <div id="summary" class="summary-list"></div>
+        </section>
+
+        <section class="grid three-col">
+            <div class="card">
+                <h3>Manage Teams</h3>
+                <form id="teamForm" class="stack-form">
+                    <input id="teamName" placeholder="Team name" required>
+                    <input id="teamShortName" placeholder="Short name e.g. IND" required>
+                    <input id="teamCity" placeholder="City">
+                    <button type="submit">Add Team</button>
+                </form>
+                <div id="teamList" class="simple-list"></div>
+            </div>
+
+            <div class="card">
+                <h3>Manage Players</h3>
+                <form id="playerForm" class="stack-form">
+                    <input id="playerName" placeholder="Player name" required>
+                    <select id="playerRole">
+                        <option>BATTER</option>
+                        <option>BOWLER</option>
+                        <option>ALL_ROUNDER</option>
+                        <option>WICKET_KEEPER</option>
+                    </select>
+                    <select id="playerTeam" required></select>
+                    <button type="submit">Add Player</button>
+                </form>
+                <div id="playerList" class="simple-list"></div>
+            </div>
+
+            <div class="card">
+                <h3>Create Match</h3>
+                <form id="matchForm" class="stack-form">
+                    <input id="newMatchTitle" placeholder="Match title" required>
+                    <input id="newMatchVenue" placeholder="Venue" required>
+                    <select id="matchTeamOne" required></select>
+                    <select id="matchTeamTwo" required></select>
+                    <input id="oversLimit" type="number" min="1" max="50" value="20" required>
+                    <button type="submit">Create Live Match</button>
+                </form>
+                <p class="small-note">New matches start in LIVE status so the score simulator can be demonstrated immediately.</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="project-trademark">
+        <div class="trademark-title">Project Trademark</div>
+        <div class="trademark-name">MUHAMMAD TAHA SAMEER KHATIB</div>
+        <div class="trademark-details">CS H • Batch 2 • Roll No. 22</div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
